@@ -40,6 +40,7 @@ class Node extends React.Component {
 
   add() {
     console.log("clicked add on node " + this.props.index);
+    this.props.addNode(this.props.index);
   }
 
   nix() {
@@ -95,6 +96,7 @@ class Cluster extends React.Component {
   constructor(props) {
     super(props);
     this.updateNode = this.updateNode.bind(this);
+    this.addNode = this.addNode.bind(this);
     this.nixNode = this.nixNode.bind(this);
     this.eachNode = this.eachNode.bind(this);
     this.state = {
@@ -115,8 +117,20 @@ class Cluster extends React.Component {
     }
   }
 
+  addNode(i) {
+    console.log("adding from node" + i);
+    var arr = this.state.nodes;
+    arr.push(
+      {
+        text: 'The seed of an idea so good it must be recorded here for your sake and for mine.',
+        sub_nodes: Array(0),
+      },
+    );
+    this.setState({nodes: arr});
+  }
+
   nixNode(i) {
-    console.log("removing node " + i);
+    console.log("nixing node " + i);
     var arr = this.state.nodes;
     arr.splice(i,1);
     this.setState({nodes: arr});
@@ -136,6 +150,7 @@ class Cluster extends React.Component {
         index={i}
         node={node}
         updateNode = {this.updateNode}
+        addNode = {this.addNode}
         nixNode = {this.nixNode}
       />
     );
