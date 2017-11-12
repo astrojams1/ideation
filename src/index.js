@@ -30,7 +30,7 @@ class Node extends React.Component {
   constructor(props) {
     super(props);
     this.add = this.add.bind(this);
-    this.remove = this.remove.bind(this);
+    this.nix = this.nix.bind(this);
     this.edit = this.edit.bind(this);
     this.save = this.save.bind(this);
     this.state = {
@@ -39,24 +39,21 @@ class Node extends React.Component {
   }
 
   add() {
-    console.log("pressed: add");
+    console.log("clicked add on node " + this.props.index);
   }
 
-  remove() {
-    console.log("pressed: remove");
-    this.props.removeNode(this.props.index);
+  nix() {
+    console.log("clicked nix on node " + this.props.index);
+    this.props.nixNode(this.props.index);
   }
 
   edit() {
-    console.log("pressed: edit");
+    console.log("clicked edit on node " + this.props.index);
     this.setState({editing: true});
   }
 
   save() {
-    console.log("pressed: save");
-    console.log(this)
-    console.log(this.refs.newText.value)
-    console.log(this.props.index)
+    console.log("clicked save on node " + this.props.index);
     this.props.updateNode(this.refs.newText.value, this.props.index)
     this.setState({editing: false});
   }
@@ -77,7 +74,7 @@ class Node extends React.Component {
         <p>{this.props.node.text}</p>
         <button onClick={this.add}>Add</button>
         <button onClick={this.edit}>Edit</button>
-        <button onClick={this.remove}>Remove</button>
+        <button onClick={this.nix}>Nix</button>
       </div>
     );
   }
@@ -86,12 +83,9 @@ class Node extends React.Component {
     //return html to display.
     //can only return 1 parent element
     //access props via this.props.
-    console.log(this)
     if (this.state.editing) {
-      console.log("editing")
       return this.renderForm();
     } else {
-      console.log("not editing")
       return this.renderNormal();
     }
   } 
@@ -101,7 +95,7 @@ class Cluster extends React.Component {
   constructor(props) {
     super(props);
     this.updateNode = this.updateNode.bind(this);
-    this.removeNode = this.removeNode.bind(this);
+    this.nixNode = this.nixNode.bind(this);
     this.eachNode = this.eachNode.bind(this);
     this.state = {
       nodes: [
@@ -121,15 +115,15 @@ class Cluster extends React.Component {
     }
   }
 
-  removeNode(i) {
-    console.log("removing node" + i);
+  nixNode(i) {
+    console.log("removing node " + i);
     var arr = this.state.nodes;
     arr.splice(i,1);
     this.setState({nodes: arr});
   }
 
   updateNode(newText, i) {
-    console.log("updating node" + i);
+    console.log("updating node " + i);
     var arr = this.state.nodes;
     arr[i].text = newText;
     this.setState({nodes: arr});
@@ -142,7 +136,7 @@ class Cluster extends React.Component {
         index={i}
         node={node}
         updateNode = {this.updateNode}
-        removeNode = {this.removeNode}
+        nixNode = {this.nixNode}
       />
     );
   }
