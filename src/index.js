@@ -103,14 +103,7 @@ class Cluster extends React.Component {
       nodes: [
         {
           text: 'The seed of an idea so good it must be recorded here for your sake and for mine.',
-          sub_nodes: Array(0),
-        },
-        {
-          text: 'The seed of an idea so good it must be recorded here for your sake and for mine.',
-          sub_nodes: Array(0),
-        },
-        {
-          text: 'The seed of an idea so good it must be recorded here for your sake and for mine.',
+          parent_index: null,
           sub_nodes: Array(0),
         },
       ]
@@ -118,11 +111,18 @@ class Cluster extends React.Component {
   }
 
   addNode(i) {
-    console.log("adding from node" + i);
+    console.log("adding sub_node to node " + i);
     var arr = this.state.nodes;
     arr.push(
       {
-        text: 'The seed of an idea so good it must be recorded here for your sake and for mine.',
+        text: 'I am a new node.',
+        parent_index: i,
+        sub_nodes: Array(0),
+      },
+    );
+    arr[i].sub_nodes.push(
+      {
+        text: 'I am a new node.',
         sub_nodes: Array(0),
       },
     );
