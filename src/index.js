@@ -2,30 +2,6 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 
-  // constructor(props) {
-  //   super(props);
-  //   this.state = {
-  //     history: [
-  //       {
-  //         node: 
-  //           {
-  //             text: 'The seed of an idea so good it must be recorded here for your sake and for mine.',
-  //             location: [],
-  //             sub_nodes: Array(0),
-  //           },
-  //       }
-  //     ],
-  //     historyIndex: 0,
-  //   };
-  // }
-
-  // const history = this.state.history;
-  // const current = history[history.length - 1];
-  // const nodes = [current.node, current.node, current.node];
-
-  // sticky note
-  // comment = node.
-
 class Node extends React.Component {
   constructor(props) {
     super(props);
@@ -55,7 +31,7 @@ class Node extends React.Component {
 
   save() {
     console.log("clicked save on node " + this.props.index);
-    this.props.updateNode(this.refs.newText.value, this.props.index)
+    this.props.updateNodeText(this.refs.newText.value, this.props.index)
     this.setState({editing: false});
   }
 
@@ -84,10 +60,14 @@ class Node extends React.Component {
     //return html to display.
     //can only return 1 parent element
     //access props via this.props.
-    if (this.state.editing) {
-      return this.renderForm();
-    } else {
-      return this.renderNormal();
+    if (!this.props.node.nixed)
+      if (this.state.editing) {
+        return this.renderForm();
+      } else {
+        return this.renderNormal();
+      }
+    else {
+      return null;
     }
   } 
 }
@@ -95,7 +75,7 @@ class Node extends React.Component {
 class Cluster extends React.Component {
   constructor(props) {
     super(props);
-    this.updateNode = this.updateNode.bind(this);
+    this.updateNodeText = this.updateNodeText.bind(this);
     this.addNode = this.addNode.bind(this);
     this.nixNode = this.nixNode.bind(this);
     this.eachNode = this.eachNode.bind(this);
@@ -103,7 +83,9 @@ class Cluster extends React.Component {
       nodes: [
         {
           text: 'The seed of an idea so good it must be recorded here for your sake and for mine.',
+          nixed: false,
           parent_index: null,
+          self_index: 0,
           sub_nodes: Array(0),
         },
       ]
@@ -113,31 +95,48 @@ class Cluster extends React.Component {
   addNode(i) {
     console.log("adding sub_node to node " + i);
     var arr = this.state.nodes;
+    // add the node to the array of nodes
     arr.push(
       {
-        text: 'I am a new node.',
+        text: 'I am a new node with parent_index ' + i + ' and self_index ' + arr[i].sub_nodes.length,
+        nixed: false,
         parent_index: i,
+        self_index: arr[i].sub_nodes.length,
         sub_nodes: Array(0),
       },
     );
+    // update the parent node with new child
     arr[i].sub_nodes.push(
       {
-        text: 'I am a new node.',
+        text: 'I am a new node with parent_index ' + i + ' and self_index ' + arr[i].sub_nodes.length,
+        nixed: false,
+        parent_index: i,
+        self_index: arr[i].sub_nodes.length,
         sub_nodes: Array(0),
       },
     );
+    // update the parents upstream until you hit the seed
+    var micro_cluster = arr[i];
+    var micro_cluster_index = i;
+    var micro_cluster_parent_index = micro_cluster.parent_index;
+    while (micro_cluster_index) {
+      arr[micro_cluster_parent_index].sub_nodes[micro_cluster.self_index] = micro_cluster;
+      micro_cluster = arr[micro_cluster_parent_index];
+      micro_cluster_index = micro_cluster_parent_index;
+      micro_cluster_parent_index = micro_cluster.parent_index;
+    }
     this.setState({nodes: arr});
   }
 
   nixNode(i) {
     console.log("nixing node " + i);
     var arr = this.state.nodes;
-    arr.splice(i,1);
+    arr[i].nixed = true;
     this.setState({nodes: arr});
   }
 
-  updateNode(newText, i) {
-    console.log("updating node " + i);
+  updateNodeText(newText, i) {
+    console.log("updating text for node " + i);
     var arr = this.state.nodes;
     arr[i].text = newText;
     this.setState({nodes: arr});
@@ -149,7 +148,7 @@ class Cluster extends React.Component {
         key={i}
         index={i}
         node={node}
-        updateNode = {this.updateNode}
+        updateNodeText = {this.updateNodeText}
         addNode = {this.addNode}
         nixNode = {this.nixNode}
       />
@@ -169,11 +168,7 @@ class Cluster extends React.Component {
 
 // ========================================
 
-
-// ReactDOM.render(html, where?)
 ReactDOM.render(
-  // you can pass data from html parent to child via properties this.props
-  // you can also pass whatever is inside the html with this.props.children
   <Cluster/>
   , document.getElementById('root')
 );
