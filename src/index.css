@@ -11,7 +11,7 @@ p:focus {
 }
 
 p {
-  margin: 0 0 8px 0;
+  margin: 0;
   padding: 0;
   font-family: Times;
   text-align: center;
@@ -26,6 +26,7 @@ p {
 .node {
   /*cursor: text; not working */
   position: absolute;
+  left: 50%;
   top: 50%;
   text-align: center;
   transform: translate(-50%, -50%);
@@ -36,25 +37,21 @@ p {
 }
 
 .node.depth-0 {
-  font-size: 2em;
-  left: 50%;
+  font-size: 2.00em;
   width: 20%;
 }
 
 .node.depth-1 {
-  font-size: 1em;
-  left: 66%;
+  font-size: 1.00em;
   width: 10%;
 }
 
 .node.depth-2 {
   font-size: 0.75em;
-  left: 76%;
   width: 7.5%;
 }
 
 .node.depth-3 {
-  font-size: 0.5em;
-  left: 84%;
+  font-size: 0.50em;
   width: 5.6%;
 }
