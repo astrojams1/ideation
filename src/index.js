@@ -82,10 +82,11 @@ class Cluster extends React.Component {
     this.state = {
       nodes: [
         {
+          depth: 0,
           text: 'The seed of an idea so good it must be recorded here for your sake and for mine.',
           nixed: false,
           parent_index: null,
-          self_index: 0,
+          sibling_index: 0,
           sub_nodes: Array(0),
         },
       ]
@@ -96,34 +97,27 @@ class Cluster extends React.Component {
     console.log("adding sub_node to node " + i);
     var arr = this.state.nodes;
     // add the node to the array of nodes
-    arr.push(
-      {
-        text: 'I am a new node with parent_index ' + i + ' and self_index ' + arr[i].sub_nodes.length,
-        nixed: false,
-        parent_index: i,
-        self_index: arr[i].sub_nodes.length,
-        sub_nodes: Array(0),
-      },
-    );
-    // update the parent node with new child
-    arr[i].sub_nodes.push(
-      {
-        text: 'I am a new node with parent_index ' + i + ' and self_index ' + arr[i].sub_nodes.length,
-        nixed: false,
-        parent_index: i,
-        self_index: arr[i].sub_nodes.length,
-        sub_nodes: Array(0),
-      },
-    );
-    // update the parents upstream until you hit the seed
-    var micro_cluster = arr[i];
-    var micro_cluster_index = i;
-    var micro_cluster_parent_index = micro_cluster.parent_index;
-    while (micro_cluster_index) {
-      arr[micro_cluster_parent_index].sub_nodes[micro_cluster.self_index] = micro_cluster;
-      micro_cluster = arr[micro_cluster_parent_index];
-      micro_cluster_index = micro_cluster_parent_index;
-      micro_cluster_parent_index = micro_cluster.parent_index;
+    var newNode = {
+      depth: arr[i].depth + 1,
+      text: 'I am a new node! with parent_index ' + i + ' and sibling_index ' + arr[i].sub_nodes.length,
+      nixed: false,
+      parent_index: i,
+      sibling_index: arr[i].sub_nodes.length,
+      sub_nodes: Array(0),
+    }
+    // add a new node to the array
+    arr.push(newNode);
+    // update the parent node with new child (which node the user clicked "add" from)
+    arr[i].sub_nodes.push(newNode);
+    // update the parents upstream with new node data until you hit the seed
+    var sub_cluster = arr[i];
+    var sub_cluster_parent_index = sub_cluster.parent_index;
+    //until i reach the seed, whose parents index is null.
+    while (sub_cluster_parent_index) {
+      arr[sub_cluster_parent_index].sub_nodes[sub_cluster.sibling_index] = sub_cluster;
+      //set up for the next round:
+      sub_cluster = arr[sub_cluster_parent_index];
+      sub_cluster_parent_index = sub_cluster.parent_index;
     }
     this.setState({nodes: arr});
   }
