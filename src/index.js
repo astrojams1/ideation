@@ -7,11 +7,7 @@ class Node extends React.Component {
     super(props);
     this.add = this.add.bind(this);
     this.nix = this.nix.bind(this);
-    this.edit = this.edit.bind(this);
     this.save = this.save.bind(this);
-    this.state = {
-      editing: false
-    };
   }
 
   add() {
@@ -24,49 +20,23 @@ class Node extends React.Component {
     this.props.nixNode(this.props.index);
   }
 
-  edit() {
-    console.log("clicked edit on node " + this.props.index);
-    this.setState({editing: true});
-  }
-
   save() {
-    console.log("clicked save on node " + this.props.index);
-    this.props.updateNodeText(this.refs.newText.value, this.props.index)
-    this.setState({editing: false});
-  }
-
-  renderForm() {
-    //this is where newText is introduced
-    return(
-      <div className="node">
-        <textarea ref="newText" defaultValue = {this.props.node.text}></textarea>
-        <button onClick={this.save}>Save</button>
-      </div>
-    );
-  }
-
-  renderNormal() {
-    return(
-      <div className="node">
-        <p>{this.props.node.text}</p>
-        <button onClick={this.add}>Add</button>
-        <button onClick={this.edit}>Edit</button>
-        <button onClick={this.nix}>Nix</button>
-      </div>
-    );
+    var newText = this.refs.newText.innerText;
+    this.props.updateNodeText(newText, this.props.index);
+    if (newText === "") {
+      this.nix();
+    }
   }
 
   render() {
-    //return html to display.
-    //can only return 1 parent element
-    //access props via this.props.
-    if (!this.props.node.nixed)
-      if (this.state.editing) {
-        return this.renderForm();
-      } else {
-        return this.renderNormal();
-      }
-    else {
+    if (!this.props.node.nixed) {
+      return (
+        <div className={"node depth-"+Math.min(3,this.props.node.depth)}>
+          <p ref="newText" onBlur={this.save} contentEditable="true">{this.props.node.text}</p>
+          <button onClick={this.add}>Add</button>
+        </div>
+      );
+    } else {
       return null;
     }
   } 
@@ -83,7 +53,7 @@ class Cluster extends React.Component {
       nodes: [
         {
           depth: 0,
-          text: 'The seed of an idea so good it must be recorded here for your sake and for mine.',
+          text: 'The seed of a great idea ready to explode',
           nixed: false,
           parent_index: null,
           sibling_index: 0,
@@ -99,7 +69,7 @@ class Cluster extends React.Component {
     // add the node to the array of nodes
     var newNode = {
       depth: arr[i].depth + 1,
-      text: 'I am a new node! with parent_index ' + i + ' and sibling_index ' + arr[i].sub_nodes.length,
+      text: '',
       nixed: false,
       parent_index: i,
       sibling_index: arr[i].sub_nodes.length,
@@ -112,7 +82,7 @@ class Cluster extends React.Component {
     // update the parents upstream with new node data until you hit the seed
     var sub_cluster = arr[i];
     var sub_cluster_parent_index = sub_cluster.parent_index;
-    //until i reach the seed, whose parents index is null.
+    //loop until i reach the seed, whose parents index is null.
     while (sub_cluster_parent_index) {
       arr[sub_cluster_parent_index].sub_nodes[sub_cluster.sibling_index] = sub_cluster;
       //set up for the next round:
@@ -151,10 +121,8 @@ class Cluster extends React.Component {
 
   render() {
     return(
-      <div className="Cluster">
-        {
-          this.state.nodes.map(this.eachNode)
-        }
+      <div className="cluster">
+        {this.state.nodes.map(this.eachNode)}
       </div>
     );
   }

@@ -1,6 +1,60 @@
-.node {
+body {
+  background-color: black;
+}
+
+button {
+  opacity: 0;
+}
+
+p:focus {
+  outline: none;
+}
+
+p {
+  margin: 0 0 8px 0;
+  padding: 0;
+  font-family: Times;
   text-align: center;
-  margin: 0 auto;
-  padding: 15px 30px;
-  width: 180px;
+}
+
+.cluster {
+  position: relative;
+  background-color: white;
+  height: 600px;
+}
+
+.node {
+  /*cursor: text; not working */
+  position: absolute;
+  top: 50%;
+  text-align: center;
+  transform: translate(-50%, -50%);
+}
+
+.node:hover button {
+  opacity: 1;
+}
+
+.node.depth-0 {
+  font-size: 2em;
+  left: 50%;
+  width: 20%;
+}
+
+.node.depth-1 {
+  font-size: 1em;
+  left: 66%;
+  width: 10%;
+}
+
+.node.depth-2 {
+  font-size: 0.75em;
+  left: 76%;
+  width: 7.5%;
+}
+
+.node.depth-3 {
+  font-size: 0.5em;
+  left: 84%;
+  width: 5.6%;
 }
