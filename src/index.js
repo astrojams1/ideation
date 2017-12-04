@@ -4,6 +4,10 @@ IDEATION APP
 Author: James Thompson
 Hosting: not hosted
 Github: https://github.com/astrojams1/ideation-app
+
+Todo:
+- add lines
+- improve creation ux
 */
 
 import React from 'react';
