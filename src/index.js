@@ -63,7 +63,7 @@ class Cluster extends React.Component {
       nodes: [
         {
           depth: 0,
-          text: 'iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii',
+          text: 'New idea',
           nixed: false,
           parent_index: null,
           sibling_index: 0,
@@ -116,7 +116,7 @@ class Cluster extends React.Component {
     // add the node to the array of nodes
     var newNode = {
       depth: arr[i].depth + 1,
-      text: 'iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii',
+      text: 'New idea',
       nixed: false,
       parent_index: i,
       sibling_index: arr[i].sub_nodes.length,
