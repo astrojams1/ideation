@@ -1,3 +1,11 @@
+/*
+IDEATION APP
+
+Author: James Thompson
+Hosting: not hosted
+Github: https://github.com/astrojams1/ideation-app
+*/
+
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
@@ -41,7 +49,7 @@ class Node extends React.Component {
     } else {
       return null;
     }
-  } 
+  }
 }
 
 class Cluster extends React.Component {
@@ -63,7 +71,7 @@ class Cluster extends React.Component {
           xyt: [0,0,0],
         },
       ],
-      layout: 
+      layout:
       {
         d1_offset: [20,20],
         d2_offset: [32,32],
@@ -144,7 +152,7 @@ class Cluster extends React.Component {
 
   eachNode(node, i) {
     return(
-      <Node 
+      <Node
         key={i}
         index={i}
         node={node}
