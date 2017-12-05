@@ -1,5 +1,6 @@
 body {
   background-color: black;
+  margin: 0;
 }
 
 button {
@@ -11,6 +12,8 @@ p:focus {
 }
 
 p {
+  background-color: white;
+  box-shadow: 0 0 10px 10px white;
   margin: 0;
   padding: 0;
   font-family: 'Open Sans', sans-serif;
@@ -21,15 +24,17 @@ p {
   position: relative;
   background-color: white;
   height: 600px;
+  margin: 0 auto;
+  width: 600px;
 }
 
 .node {
-  /*cursor: text; not working */
   position: absolute;
   left: 50%;
   top: 50%;
   text-align: center;
   transform: translate(-50%, -50%);
+  z-index:1;
 }
 
 .node:hover button {
@@ -38,20 +43,27 @@ p {
 
 .node.depth-0 {
   font-size: 2.00em;
-  width: 20%;
+  max-width: 20%;
 }
 
 .node.depth-1 {
   font-size: 1.00em;
-  width: 10%;
+  max-width: 10%;
 }
 
 .node.depth-2 {
   font-size: 0.75em;
-  width: 7.5%;
+  max-width: 7.5%;
 }
 
 .node.depth-3 {
   font-size: 0.50em;
-  width: 5.6%;
+  max-width: 5.6%;
+}
+
+.spoke {
+  background-color: black;
+  height: 1px;
+  position: absolute;
+  z-index:0;
 }

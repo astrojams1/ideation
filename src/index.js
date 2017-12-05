@@ -41,17 +41,55 @@ class Node extends React.Component {
   }
 
   render() {
-    var x_pos = (50 + this.props.node.xyt[0]).toString() + '%';
-    var y_pos = (50 + this.props.node.xyt[1]).toString() + '%';
-    if (!this.props.node.nixed) {
-      return (
-        <div className={"node depth-"+Math.min(3,this.props.node.depth)} style={{left:x_pos, top:y_pos}}>
-            <p ref="newText" onBlur={this.save} contentEditable="true">{this.props.node.text}</p>
+    var node = this.props.node;
+    var x_pos = 50 + node.xyt[0];
+    var y_pos = 50 + node.xyt[1];
+    if (node.parent_index != null) {
+      var x_pos_parent = 50 + node.parent_node.xyt[0];
+      var y_pos_parent = 50 + node.parent_node.xyt[1];
+      var dx = x_pos - x_pos_parent;
+      var dy = y_pos - y_pos_parent;
+      var spoke_length = Math.sqrt((dx*dx)+(dy*dy));
+      var spoke_angle = (dy >= 0) ? Math.acos(dx/spoke_length)*180/Math.PI : -Math.acos(dx/spoke_length)*180/Math.PI;
+      var x_pos_spoke_center = (x_pos + x_pos_parent)/2;
+      var y_pos_spoke_center = (y_pos + y_pos_parent)/2;
+      var x_pos_spoke = x_pos_spoke_center - spoke_length/2;
+      var y_pos_spoke = y_pos_spoke_center;
+      console.log('x_pos '+ x_pos);
+      console.log('y_pos '+ y_pos);
+      console.log('x_pos_parent '+ x_pos_parent);
+      console.log('y_pos_parent '+ y_pos_parent);
+      console.log('spoke length '+ spoke_length);
+      console.log('dx '+ dx);
+      console.log('dy '+ dy);
+      console.log('spoke angle '+ spoke_angle);
+      console.log('x_pos_spoke '+ x_pos_spoke);
+      console.log('y_pos_spoke '+ y_pos_spoke);
+      if (!node.nixed) {
+        return (
+          <div>
+            <div className="spoke" style={{
+              left:(x_pos_spoke).toString()+'%',
+              top:(y_pos_spoke).toString()+'%',
+              transform:'rotate('+spoke_angle+'deg)',
+              width:spoke_length.toString()+'%',
+            }}></div>
+            <div className={"node depth-"+Math.min(3,node.depth)} style={{left:x_pos.toString()+'%', top:y_pos.toString()+'%'}}>
+                <p ref="newText" onBlur={this.save} contentEditable="true">{node.text}</p>
+                <button onClick={this.add}>Add</button>
+            </div>
+          </div>
+        );
+      } else {
+        return null;
+      }
+    } else {
+      return(
+        <div className={"node depth-"+Math.min(3,node.depth)} style={{left:x_pos.toString()+'%', top:y_pos.toString()+'%'}}>
+            <p ref="newText" onBlur={this.save} contentEditable="true">{node.text}</p>
             <button onClick={this.add}>Add</button>
         </div>
       );
-    } else {
-      return null;
     }
   }
 }
@@ -67,8 +105,9 @@ class Cluster extends React.Component {
       nodes: [
         {
           depth: 0,
-          text: 'New idea',
+          text: 'iii',
           nixed: false,
+          parent_node: null,
           parent_index: null,
           sibling_index: 0,
           sub_nodes: Array(0),
@@ -92,7 +131,6 @@ class Cluster extends React.Component {
     var arr = this.state.nodes;
     var d1_offset = this.state.layout.d1_offset;
     var d2_offset = this.state.layout.d2_offset;
-    console.log(arr[i].parent_index == null);
     if (arr[i].parent_index == null) { // check if parent is the seed
       console.log("parent is seed!")
       var t = arr[i].sub_nodes.length * (1/this.state.layout.d1_max) * Math.PI * 2;
@@ -120,8 +158,9 @@ class Cluster extends React.Component {
     // add the node to the array of nodes
     var newNode = {
       depth: arr[i].depth + 1,
-      text: 'New idea',
+      text: 'iii',
       nixed: false,
+      parent_node: arr[i],
       parent_index: i,
       sibling_index: arr[i].sub_nodes.length,
       sub_nodes: Array(0),
@@ -168,8 +207,9 @@ class Cluster extends React.Component {
   }
 
   render() {
+    var cluster_size = Math.min(window.innerWidth,window.innerHeight);
     return(
-      <div className="cluster">
+      <div className="cluster" style={{width:cluster_size, height:cluster_size}}>
         {this.state.nodes.map(this.eachNode)}
       </div>
     );
