@@ -4,7 +4,7 @@ body {
 }
 
 button {
-  opacity: 0;
+  display: none;
 }
 
 p:focus {
@@ -38,7 +38,7 @@ p {
 }
 
 .node:hover button {
-  opacity: 1;
+  display: block;
 }
 
 .node.depth-0 {
